@@ -51,6 +51,7 @@ jobs:
           file_extensions: |
             **/*.ts
             **/*.tsx
+            **/*.mjs
           extra_args: "--max-warnings=0"
           ignore_patterns: "src/reportWebVitals.ts"
           trigger_files: "eslint.config.mjs"

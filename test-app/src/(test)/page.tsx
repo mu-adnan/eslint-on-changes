@@ -5,5 +5,3 @@ function Page() {
 }
 
 export default Page;
-
-// helloo

@@ -33,7 +33,35 @@ if [[ -n "$INPUT_CONFIG_PATH" ]]; then
   CONFIG_ARG="--config=${INPUT_CONFIG_PATH}"
 fi
 
-if [[ "$INPUT_ALL_FILES" == "true" ]]; then
+# If trigger files are provided, and any of them are present in the changed files list,
+# force running ESLint on all files (useful when config/package files change).
+FORCE_ALL_FILES="false"
+if [[ -n "${INPUT_TRIGGER_FILES:-}" && -n "${INPUT_CHANGED_FILES:-}" ]]; then
+  # Split comma-separated trigger list into an array
+  IFS=',' read -ra _TRIGGERS <<< "$INPUT_TRIGGER_FILES"
+  echo "Triggers: ${_TRIGGERS[*]}"
+  for _t in "${_TRIGGERS[@]}"; do
+    # trim whitespace from each trigger
+    trigger=$(echo "${_t}" | xargs)
+    if [[ -z "$trigger" ]]; then
+      continue
+    fi
+    # Compare against changed files list (space-separated)
+    for changed in ${INPUT_CHANGED_FILES}; do
+      # Match exact path or basename match (e.g. package.json or path/to/package.json)
+      if [[ "$changed" == "$trigger" ]]; then
+        echo "Trigger file '$trigger' found in changed files ('$changed'). Running ESLint on all files."
+        FORCE_ALL_FILES="true"
+        break 2
+      fi
+    done
+  done
+fi
+echo "Force ESLint on all files: $FORCE_ALL_FILES"
+echo "Changed files: ${INPUT_CHANGED_FILES[*]}"
+echo "Trigger files: ${INPUT_TRIGGER_FILES:-}"
+
+if [[ "$INPUT_ALL_FILES" == "true" || "$FORCE_ALL_FILES" == "true" ]]; then
   echo "Running ESLint on all files..."
   if [[ "$INPUT_SKIP_ANNOTATIONS" == "true" ]]; then
     echo "Skipping annotations..."

@@ -54,7 +54,7 @@ jobs:
             **/*.mjs
           extra_args: "--max-warnings=0"
           ignore_patterns: "src/reportWebVitals.ts"
-          trigger_files: "eslint.config.mjs"
+          trigger_files: "package.json, src/(test)page.tsx"
           escape_paths: false
 
       - name: Fix Lint Errors

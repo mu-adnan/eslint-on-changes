@@ -49,7 +49,7 @@ if [[ -n "${INPUT_TRIGGER_FILES:-}" && -n "${INPUT_CHANGED_FILES:-}" ]]; then
     # Compare against changed files list (space-separated)
     for changed in ${INPUT_CHANGED_FILES}; do
       # Match exact path or basename match (e.g. package.json or path/to/package.json)
-      if [[ "$changed" == "$trigger" || "$changed" == */"$trigger" ]]; then
+      if [[ "$changed" == "$trigger" ]]; then
         echo "Trigger file '$trigger' found in changed files ('$changed'). Running ESLint on all files."
         FORCE_ALL_FILES="true"
         break 2

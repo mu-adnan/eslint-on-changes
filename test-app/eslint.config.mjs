@@ -40,5 +40,3 @@ export default [
     rules: styleLintConfig.rules,
   },
 ];
-
-// This is a test comment

@@ -39,6 +39,7 @@ FORCE_ALL_FILES="false"
 if [[ -n "${INPUT_TRIGGER_FILES:-}" && -n "${INPUT_CHANGED_FILES:-}" ]]; then
   # Split comma-separated trigger list into an array
   IFS=',' read -ra _TRIGGERS <<< "$INPUT_TRIGGER_FILES"
+  echo "Triggers: ${_TRIGGERS[*]}"
   for _t in "${_TRIGGERS[@]}"; do
     # trim whitespace from each trigger
     trigger=$(echo "${_t}" | xargs)
@@ -56,6 +57,9 @@ if [[ -n "${INPUT_TRIGGER_FILES:-}" && -n "${INPUT_CHANGED_FILES:-}" ]]; then
     done
   done
 fi
+echo "Force ESLint on all files: $FORCE_ALL_FILES"
+echo "Changed files: ${INPUT_CHANGED_FILES[*]}"
+echo "Trigger files: ${INPUT_TRIGGER_FILES:-}"
 
 if [[ "$INPUT_ALL_FILES" == "true" || "$FORCE_ALL_FILES" == "true" ]]; then
   echo "Running ESLint on all files..."
